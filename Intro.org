@@ -1,0 +1,13 @@
+#+TITLE: Haskell Book
+
+#+LATEX_HEADER: \usepackage{tikz-cd}
+#+LATEX_HEADER: \usepackage{adjustbox}
+
+#+begin_export latex
+\adjustbox{scale=3, center}{%
+  \begin{tikzcd}
+  T \arrow[d, orange, "class" left] \arrow[r, blue, "family"] & T \\
+  V \arrow[r, red, "function"] & V \arrow[u, green, "index" right]
+  \end{tikzcd}
+}
+#+end_export
