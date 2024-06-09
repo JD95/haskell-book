@@ -1,13 +1,80 @@
 #+TITLE: Haskell Book
+#+DATE: 7 Jun 2024
 
+#+LATEX_CLASS: book
 #+LATEX_HEADER: \usepackage{tikz-cd}
 #+LATEX_HEADER: \usepackage{adjustbox}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usepackage{csquotes}
+#+LATEX_HEADER: \NewDocumentCommand{\haskell}{m}{\mintinline{haskell}{#1}}
 
-#+begin_export latex
-\adjustbox{scale=3, center}{%
+* Foundations
+
+** The First Program
+
+We begin with the \enquote{hello\ world} program.
+
+\inputminted[linenos, firstline=3]{haskell}{snippet/HelloWorld.hs}
+
+\begin{minted}[linenos, highlightlines={2}]{bash}
+> cabal run hello_world
+hello world
+\end{minted}
+
+To explain this program we'll take the code apart and explain the following concepts behind each of the pieces
+
+- values ($\haskell{"hello world"}$)
+- types ($\haskell{()}$)
+- type inference/checking ($\haskell{::}$)
+- families ($\haskell{IO}$)
+
+*** Values
+
+Values are data, like files
+
+*** Types
+
+While values describe how the bits and bites on the machine will be shaped and transformed when the program is run, types describe how our values will be shaped and transformed when the program is compiled. To continue the file metaphor, types are like file extensions. When you look at a file and see that it has the $\emph{.mp3}$ extension, you know that the files contains music\footnote{Types are actually much stronger than file extensions. You can arbitrarily put an extension on any file, but types guarentee what they are attached to has the proper shape}.
+
+Basic Types
+- $\haskell{()}$ - The unit type
+- $\haskell{Int}$ - The type of integer values ($\haskell{0}$, $\haskell{1}$, $\haskell{-1}$, \ldots)
+- $\haskell{String}$ - The type of strings ($\haskell{"abcABC"}$, $\haskell{"aaa555"}$, $\haskell{":)"}$, \ldots)
+
+*** Type Inference/Checking
+
+*** Functions
+
+\begin{tikzcd}
+                 & \haskell{"abc"}
+                      \arrow[dl, "init" left]
+                      \arrow[dr, "tail" right] & \\
+  \haskell{"ab"} &                             & \haskell{"bc"}
+\end{tikzcd}
+
+*** The Four Fundamental Features of Haskell
+
+\begin{adjustbox}{scale=3, center}
   \begin{tikzcd}
   T \arrow[d, orange, "class" left] \arrow[r, blue, "family"] & T \\
   V \arrow[r, red, "function"] & V \arrow[u, green, "index" right]
   \end{tikzcd}
-}
-#+end_export
+\end{adjustbox}
+
+\begin{adjustbox}{scale=3, center}
+  \begin{tikzcd}[column sep=small]
+    & Pair\ a\ b \arrow[dl, "fst" left] \arrow[dr, "snd" right] & \\
+  a &                                                           & b
+  \end{tikzcd}
+\end{adjustbox}
+
+\begin{adjustbox}{scale=3, center}
+  \begin{tikzcd}[column sep=small]
+                            & Either\ a\ b & \\
+  a \arrow[ur, "Left" left] &              & b \arrow[ul, "Right" right]
+  \end{tikzcd}
+\end{adjustbox}
+
+*** Families
+
+Familes are just functions on types.

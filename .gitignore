@@ -1,0 +1,8 @@
+*~undo-tree~
+_minted-*/
+ltximg/
+*.svg
+*.log
+*.tex
+*.pdf
+dist-newstyle/
