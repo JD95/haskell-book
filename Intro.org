@@ -8,31 +8,64 @@
 #+LATEX_HEADER: \usepackage{csquotes}
 #+LATEX_HEADER: \NewDocumentCommand{\haskell}{m}{\mintinline{haskell}{#1}}
 
-* Foundations
+* Foundations [0/5]
 
-** The First Program
+** What's in a program [0/4]
+- [ ] Introduce the concept of an executable
+- [ ] Introduce the terminal
+- [ ] Introduce scripts
+- [ ] Explain the compilation pipeline
+- [ ] Introduce Haskell and it's tooling
 
-We begin with the \enquote{hello\ world} program.
+A programmer wants to make a computer do something.
+
+What makes a computer different from other kinds of machines? A vending machine has few buttons, insert a dollar and press a button and it will dispense the drink or snack associated with that number. An oven has a dial and a few buttons to control the baking process. Old phones had a dial pad and a button which switched it from being "picked up" to "put down".
+
+All of these machines have features which can be fit into a two categories: input and output. A vending machine takes money and a button press as input and output (hopefully) the associated snack. A phone takes a phone number as an input and outputs audio from the number dialed. A computer is a machine which can be configured to behave like essentially any machine. Of course, the processor of a computer can't physically do what a vending machine does, but it can emit signals telling the rest of the vending machine what to do. These days computers handle everything from turning on lights to flying planes.
+
+So a computer is like a machine that first presents the user with a bunch of options for what machine it should behave like and after selection will configure itself and behave like the selection. Think of smart phones and how we select an app and then the phone more or less /becomes/ that app until we switch out of it. Desktops or laptops are similar except with the concept of windows it can be /multiple/ things at once. All the things most people do on computers is via an app or program. We use iMove to make movies, Photoshop to make pictures, Spotify to play music, Powerpoint to make slide shows, etc.
+
+So in order to get a computer to do something we want, we need to create an app or a program which can configure the computer to /be/ the machine we need it to be.
+
+To make a video one manipulates a timeline with video clips, to make a photo one manipulates layers and brushes, and to make a program one works with a programming language or /code/. Like how sheet music compactly represents music to be played, a programming language specifies a program in a way that can be easily written and read.
+
+A brief overview of the entire pipeline from writing code to a running program is this: The programs are specified via a programming language in a text file, then another program, called a compiler, turns them into an executable from which the operating system (os) takes the executable and configures the computer to run the program.
+
+So we have a process like this:
+\begin{tikzcd}
+  txt \arrow[r, "compiler"] exe \arrow[r, "os"] running\ program
+\end{tikzcd}
+
+This book will use the programming language Haskell and the associated tooling for it.
+
+** The First Program [0/4]
+- [ ] Introduce Functions
+- [ ] Introduce Types
+- [ ] Introduce Type Families
+- [ ] Introduce IO
+
+The typical first program for new programmers is the \enquote{hello\ world}, a simple terminal program that does nothing but print out "hello world". Although simple, it's actually good enough to show off quite a few features of Haskell.
 
 \inputminted[linenos, firstline=3]{haskell}{snippet/HelloWorld.hs}
+
+Breaking down these two lines we see examples of
+- values ($\haskell{"hello world"}$)
+- types ($\haskell{()}$)
+- type inference/checking ($\haskell{::}$)
+- families ($\haskell{IO}$)
+
+We'll go through and introduce all of these concepts briefly, but don't worry if they don't all make sense right away. We'll see lots of examples of how everything fits together, over and over as we progress. It's alright for now to just make sure that we've at least seen the names for everything and have a reference for them later.
+
+Before we continue let's at least run the program first just to see what it does.
 
 \begin{minted}[linenos, highlightlines={2}]{bash}
 > cabal run hello_world
 hello world
 \end{minted}
 
-To explain this program we'll take the code apart and explain the following concepts behind each of the pieces
-
-- values ($\haskell{"hello world"}$)
-- types ($\haskell{()}$)
-- type inference/checking ($\haskell{::}$)
-- families ($\haskell{IO}$)
-
-*** Values
+*** Values and Types
 
 Values are data, like files
-
-*** Types
 
 While values describe how the bits and bites on the machine will be shaped and transformed when the program is run, types describe how our values will be shaped and transformed when the program is compiled. To continue the file metaphor, types are like file extensions. When you look at a file and see that it has the $\emph{.mp3}$ extension, you know that the files contains music\footnote{Types are actually much stronger than file extensions. You can arbitrarily put an extension on any file, but types guarentee what they are attached to has the proper shape}.
 
@@ -41,16 +74,40 @@ Basic Types
 - $\haskell{Int}$ - The type of integer values ($\haskell{0}$, $\haskell{1}$, $\haskell{-1}$, \ldots)
 - $\haskell{String}$ - The type of strings ($\haskell{"abcABC"}$, $\haskell{"aaa555"}$, $\haskell{":)"}$, \ldots)
 
+\being{align*}
+   \haskell{()} &\haskell{:: ()}
+ \haskell{True} &\haskell{:: Bool}
+    \haskell{0} &\haskell{:: Int}
+  \haskell{0.0} &\haskell{:: Double}
+  \haskell{'a'} &\haskell{:: Char}
+\haskell{"abc"} &\haskell{:: String}
+\end{align*}
+
+*** Functions and Families [0/3]
+- [ ] Introduce functions
+- [ ] Introduce families
+- [ ] Introduce case expressions
+
+Functions are values with holes in them.
+Familes are just functions on types
+
+By combining functions and families we can describe very abstract values. For example
+
+\begin{minted}[linenos]{haskell}
+id :: forall a. a -> a
+id x = x
+
+type family Id :: Type -> Type where
+  Id x = x
+
+const :: forall a b. a -> b -> a
+const x y = x
+
+type family Const :: Type -> Type -> Type where
+  Const x y = x
+\end{minted}
+
 *** Type Inference/Checking
-
-*** Functions
-
-\begin{tikzcd}
-                 & \haskell{"abc"}
-                      \arrow[dl, "init" left]
-                      \arrow[dr, "tail" right] & \\
-  \haskell{"ab"} &                             & \haskell{"bc"}
-\end{tikzcd}
 
 *** The Four Fundamental Features of Haskell
 
@@ -75,6 +132,10 @@ Basic Types
   \end{tikzcd}
 \end{adjustbox}
 
-*** Families
+*** IO
 
-Familes are just functions on types.
+Drawing on the analogy from before, if types like $\haskell{Int}$ or $\haskell{String}$ represent data in the same way as mp4 or jpeg files represent movies and pictures, then $\haskell{IO ()}$ represent executable programs. An $\haskell{IO Int}$ is an executable program that constructs an $\haskell{Int}$. An $\haskell{IO String}$ is a program that constructs a $\haskell{String}$. So is the type of the hello world program $\haskell{()}$? While a result of $\haskell{()}$ might be boring in the context of functions, an $\haskell{IO ()}$ is interesting because as an executable program it can /do/ things besides construct other values.
+
+The $\haskell{putStrLn}$ (put string line) function has the type $\haskell{String -> IO ()}$. So given it a stream, it constructs a program that will output that string to the terminal! There are many values like $\haskell{putStrLn}$ which construct programs. For example $\haskell{getLine :: IO String}$ which is a program that reads user input from the terminal. Another would be $\haskell{readFile :: String -> IO String}$ which, given a file path in a $\haskell{String}$, will read the contents and return it as a $\haskell{String}$.
+
+The coming chapters will cover how to combine $\haskell{IO}$ values in more complicated ways and produce more and more useful programs.
